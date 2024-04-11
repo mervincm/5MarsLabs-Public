@@ -1,5 +1,4 @@
 ---
-- name: Update APT cache and installed packages.
 - hosts: all
 
   become: true
