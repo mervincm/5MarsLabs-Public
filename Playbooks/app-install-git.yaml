@@ -12,3 +12,8 @@
       git:
 #        repo: https://github.com/Freaked-Dude/MotherOfAllPhishing.git
 #        dest: /home/ubuntu/myrepo
+#
+#
+# set default name
+# set default email
+# set default branch
