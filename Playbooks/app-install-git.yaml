@@ -8,8 +8,8 @@
         name: git
         state: present
         update_cache: yes
-    - name: Clone Remote Git Repository
-      git:
+#    - name: Clone Remote Git Repository
+#      git:
 #        repo: https://github.com/Freaked-Dude/MotherOfAllPhishing.git
 #        dest: /home/ubuntu/myrepo
 #
