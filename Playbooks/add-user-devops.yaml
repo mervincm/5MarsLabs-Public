@@ -1,6 +1,6 @@
 ---
 - name: Create a user 
-  hosts: debian1
+  hosts: all
   become: yes
   tasks:
   - name: Add user devops
