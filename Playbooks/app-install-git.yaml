@@ -1,0 +1,14 @@
+---
+- name: Install and configure GIT
+  hosts: all
+  become: true
+  tasks:
+    - name: Install Git
+      apt:
+        name: git
+        state: present
+        update_cache: yes
+    - name: Clone Remote Git Repository
+      git:
+#        repo: https://github.com/Freaked-Dude/MotherOfAllPhishing.git
+#        dest: /home/ubuntu/myrepo
