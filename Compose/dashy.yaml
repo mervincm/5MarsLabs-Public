@@ -1,0 +1,29 @@
+services:
+  dashy:
+    image: lissy93/dashy
+    container_name: Dashy
+    network_mode: bridge
+    ports:
+      - ${dashy_ui_port}:80
+    environment:
+      - NODE_ENV=production
+      - UID=${dashy_uid}
+      - GID=${dashy_gid}
+    volumes:
+     - ${docker_config}/dashy/dashy_conf.yml:/app/public/conf.yml
+     - ${docker_config}/dashy/icons:/app/public/item-icons/
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '2.00'
+          memory: 2048M
+#        reservations:
+#          cpus: '0.05'
+#          memory: 256M
+    healthcheck:
+      test: ['CMD', 'node', '/app/services/healthcheck']
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

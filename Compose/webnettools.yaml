@@ -1,0 +1,26 @@
+services:
+  webnettools:
+    image: johannesschafer/webnettools:latest
+    container_name: webnettools
+    network_mode: bridge
+    ports:
+      - ${webnettools_ui_port}:8080 # ext:int ext is a predefined environmental variable
+    environment:
+      - PUID=${webnettools_uid}
+      - PGID=${webnettools_gid}
+      - TZ=${TZ}
+      - PORT=8080 # HTTP port for web portal access
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 1024M
+#        reservations:
+#          cpus: '0.05'
+#          memory: 192M
+    healthcheck:
+      test: curl --fail -s http://localhost:8080/ || exit 1 #test the port inside the container
+      interval: 1m30s
+      timeout: 10s
+      retries: 3

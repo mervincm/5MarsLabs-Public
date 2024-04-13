@@ -1,0 +1,32 @@
+services:
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:develop
+    container_name: sonarr
+    network_mode: bridge
+    ports:
+      - ${sonarr_ui_port}:8989 # webUI port
+    environment:
+      - PUID=${sonarr_uid}
+      - PGID=${media_gid}
+      - TZ=${TZ}
+    volumes:
+      - ${docker_config}/sonarr:/config
+      - /srv/remotemount/TV_Shows:/data/media/TV-Shows
+      - /srv/remotemount/TV:/data/media/TV
+      - /srv/remotemount/Media_Backups:/Media_Backups
+      - /srv/remotemount/torrents:/data/torrents 
+      - /srv/remotemount/usenet:/data/usenet 
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '2.00'
+          memory: 2048M
+#        reservations:
+#          cpus: '0.05'
+#          memory: 256M
+    healthcheck:
+      test: curl --fail -s http://localhost:8989/ || exit 1
+      interval: 1m30s
+      timeout: 10s
+      retries: 3

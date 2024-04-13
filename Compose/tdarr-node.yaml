@@ -1,0 +1,35 @@
+services:
+  tdarr-omv-node:
+    image: ghcr.io/haveagitgat/tdarr_node:latest
+    container_name: tdarr-omv-node
+    network_mode: bridge
+    environment:
+      - TZ=${TZ}
+      - PUID=${tdarr_uid}
+      - PGID=${media_gid}
+      - UMASK_SET=002
+      - nodeName=OMV-node
+      - serverIP=${host_ip}
+      - serverPort=8266
+      - inContainer=true
+      - ffmpegVersion=6
+    volumes:
+      - ${docker_config}/tdarr-omv-node/configs:/app/configs
+      - ${docker_config}/tdarr-omv-node/logs:/app/logs
+      - /srv/remotemount/tdarrcache:/temp
+      - /srv/remotemount/Movies:/data/media/Movies
+      - /srv/remotemount/MoviesK:/data/media/MoviesK
+      - /srv/remotemount/TV:/data/media/TV
+      - /srv/remotemount/TV_Shows:/data/media/TV-Shows
+      - /srv/remotemount/Test_Media:/data/media/Test-Media
+    devices:
+      - /dev/dri:/dev/dri
+    restart: unless-stopped  
+    deploy:
+      resources:
+        limits:
+          cpus: '3.0'
+          memory: 8192M
+#        reservations:
+#          cpus: '0.05'
+#          memory: 256M

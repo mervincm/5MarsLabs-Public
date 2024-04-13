@@ -1,0 +1,30 @@
+services:
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: watchtower
+    network_mode: bridge
+    ports:
+      - ${watchtower_api_port}:8080 #not required/used but otherwise docker sees watchtower as listening to 8080
+    environment:
+      - TZ=${TZ}
+      - PUID=${watchtower_uid}
+      - PGID=${watchtower_gid}
+#      - WATCHTOWER_RUN_ONCE=true #uncomment this to run immediately once then exit
+      - WATCHTOWER_SCHEDULE=0 0 2 * * *  #uncomment this to run at 2:00 am daily 
+      - WATCHTOWER_INCLUDE_STOPPED=true
+      - WATCHTOWER_REVIVE_STOPPED=false
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_REMOVE_VOLUMES=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro #read only 
+    restart: on-failure:10
+    deploy:
+      resources:
+        limits:
+          cpus: 1.50
+          memory: 2048M
+#        reservations:
+#          cpus: '0.05'
+#          memory: 256M
+
+# Healthcheck is internal and does not need to be specified.

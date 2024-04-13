@@ -1,0 +1,46 @@
+services:
+  tdarr:
+    image: ghcr.io/haveagitgat/tdarr:latest
+    container_name: tdarr
+    network_mode: bridge
+    ports:
+      - ${tdarr_ui_port}:8265
+      - ${tdarr_api_port}:8266
+    environment:
+      - PUID=${tdarr_uid}
+      - PGID=${media_gid}
+      - TZ=${TZ}
+      - UMASK_SET=002
+      - serverIP=0.0.0.0
+      - serverPort=8266
+      - webUIPort=8265
+      - internalNode=true
+      - inContainer=true
+      - ffmpegVersion=6
+      - nodeName=OMV-Int-Node
+    volumes:
+      - ${docker_config}/tdarr/server:/app/server
+      - ${docker_config}/tdarr/configs:/app/configs
+      - ${docker_config}/tdarr/logs:/app/logs
+      - /srv/remotemount/tdarrcache:/temp
+      - /srv/remotemount/Movies:/data/media/Movies
+      - /srv/remotemount/MoviesK:/data/media/MoviesK
+      - /srv/remotemount/TV:/data/media/TV
+      - /srv/remotemount/TV_Shows:/data/media/TV-Shows
+      - /srv/remotemount/Test_Media:/data/media/Test-Media
+    devices:
+      - /dev/dri:/dev/dri
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '5.00'
+          memory: 8096M
+#        reservations:
+#          cpus: '0.05'
+#          memory: 256M
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:8265/ || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 3  

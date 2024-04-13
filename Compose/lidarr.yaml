@@ -1,0 +1,32 @@
+services:
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
+    network_mode: bridge
+    ports:
+      - ${lidarr_ui_port}:8686 # webUI port
+    environment:
+      - PUID=${lidarr_uid}
+      - PGID=${media_gid}
+      - TZ=${TZ}
+    volumes:
+      - ${docker_config}/lidarr:/config
+      - /srv/remotemount/Music:/data/media/Music/
+      - /srv/remotemount/Media_Backups:/Media_Backups     
+      - /srv/remotemount/torrents:/data/torrents 
+      - /srv/remotemount/usenet:/data/usenet 
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '2.00'
+          memory: 2048M
+#        reservations:
+#          cpus: '0.05'
+#          memory: 256M
+    healthcheck:
+      test: curl --fail -s http://localhost:8686/ || exit 1
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s

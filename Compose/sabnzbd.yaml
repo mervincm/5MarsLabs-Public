@@ -1,0 +1,29 @@
+services:
+  sabnzbd:
+    image: lscr.io/linuxserver/sabnzbd:latest
+    container_name: sabnzbd
+    network_mode: bridge
+    ports:
+      - ${sabnzbd_ui_port}:8668
+    environment:
+      - PUID=${sabnzbd_uid}
+      - PGID=${sabnzbd_gid}
+      - TZ=${TZ}
+    volumes:
+      - ${docker_config}/SABnzbd:/config
+      - /srv/remotemount/usenet:/data/usenet
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '2.00'
+          memory: 2048M
+#        reservations:
+#          cpus: '0.05'
+#          memory: 256M
+    healthcheck:
+      test: curl --fail -s http://localhost:8668/ || exit 1
+      interval: 1m30s
+      timeout: 10s
+      retries: 3   
+      

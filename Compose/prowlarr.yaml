@@ -1,0 +1,27 @@
+services:
+  radarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    network_mode: bridge
+    ports:
+      - ${prowlarr_ui_port}:9696
+    environment:
+      - PUID=${prowlarr_uid}
+      - PGID=${prowlarr_gid}
+      - TZ=${TZ}
+    volumes:
+      - ${docker_config}/prowlarr:/config
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '2.00'
+          memory: 2048M
+#        reservations:
+#          cpus: '0.05'
+#          memory: 256M
+    healthcheck:
+      test: curl --fail -s http://localhost:9696/ || exit 1
+      interval: 1m30s
+      timeout: 10s
+      retries: 3

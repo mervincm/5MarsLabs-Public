@@ -1,0 +1,36 @@
+services:
+  scrutiny:
+    image: ghcr.io/analogj/scrutiny:master-omnibus
+    container_name: scrutiny
+    network_mode: bridge
+    ports:
+      - ${scrutiny_ui_port}:8080 # webapp
+#      - "8486:8086" # influxDB admin    
+    environment:
+      - PUID=${scrutiny_uid}
+      - PGID=${scrutiny_gid}
+      - TZ=${TZ}
+    volumes:
+      - /run/udev:/run/udev:ro
+      - ${docker_config}/scrutiny/config:/opt/scrutiny/config
+      - ${docker_config}/scrutiny/config:/opt/scrutiny/influxdb
+    devices:
+      - /dev/sda
+      - /dev/nvme0n1:/dev/nvme0
+    cap_add:
+      - SYS_RAWIO
+      - SYS_ADMIN #NVME
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: 1.00
+          memory: 2048M
+#        reservations:
+#          cpus: 0.05
+#          memory: 256M
+    healthcheck:
+      test: curl --fail -s http://localhost:8080 || exit 1
+      interval: 1m30s
+      timeout: 10s
+      retries: 3

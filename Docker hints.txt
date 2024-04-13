@@ -1,0 +1,6 @@
+Command to list the external facing ports (handy when adding an app to confirm you do not try to use one that is already occupied.)
+
+This works for running containers
+docker container ls --format "table {{.ID}}\t{{.Names}}\t{{.Ports}}" -a
+
+I should finde and add what works for existing but downed containers.

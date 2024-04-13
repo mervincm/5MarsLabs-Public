@@ -1,0 +1,31 @@
+services:
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    network_mode: bridge
+    ports:
+      - ${qbittorrent_ui_port}:8084
+      - ${qbittorrent_api_port}:26252
+      - ${qbittorrent_api_port}:26252/udp
+    environment:
+      - PUID=${qbittorrent_uid}
+      - PGID=${qbittorrent_gid}
+      - TZ=${TZ}
+      - WEBUI_PORT=8084
+    volumes:
+      - ${docker_config}/qbittorrent:/config
+      - /srv/remotemount/torrents:/data/torrents
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '2.00'
+          memory: 2048M
+#        reservations:
+#          cpus: '0.05'
+#          memory: 256M
+    healthcheck:
+      test: curl --fail -s http://localhost:8084/ || exit 1
+      interval: 1m30s
+      timeout: 10s
+      retries: 3

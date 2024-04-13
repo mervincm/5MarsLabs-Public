@@ -1,0 +1,31 @@
+services:
+  radarrk:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarrk
+    network_mode: bridge
+    ports:
+      - ${radarrk_ui_port}:7879
+    environment:
+      - PUID=${radarrk_uid}
+      - PGID=${media_gid}
+      - TZ=${TZ}
+    volumes:
+      - ${docker_config}/radarrk:/config
+      - /srv/remotemount/MoviesK:/data/media/Movies
+      - /srv/remotemount/Media_Backups:/Media_Backups    
+      - /srv/remotemount/torrents:/data/torrents 
+      - /srv/remotemount/usenet:/data/usenet
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: 2.00
+          memory: 2048M
+#        reservations:
+#          cpus: '0.05'
+#          memory: 256M
+    healthcheck:
+      test: curl --fail -s http://localhost:7879/ || exit 1
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
