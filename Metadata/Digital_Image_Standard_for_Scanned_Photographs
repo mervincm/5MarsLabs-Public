@@ -1,0 +1,16 @@
+# Doc standards / goal for all digital image files and sh scripts that use EXIFTool
+# strip all non-critical metadata from the digital image
+# set filesystem metadata date tags to current / or at least post 1980 for universal file system compatibility. NO dependancies will be made on these fragile values, so compatibility is the only goal here
+# Add GPS coordinates
+# Add Country Code, Country, State, City, and location based on GPS coordination
+# Add Timezone offset based on GPS coordinates
+# Add capture date and time
+# Add digitalization date / time
+# 
+
+
+
+
+
+
+
