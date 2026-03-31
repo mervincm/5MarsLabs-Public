@@ -1,7 +1,7 @@
 # Doc standards / goal for all digital image files created by scanning a physical print
 # strip all non-critical metadata from the digital image
 # set filesystem metadata date tags to current / or at least post 1980 for universal file system compatibility. NO dependancies will be made on these fragile values, so compatibility is the only goal here
-# Add GPS coordinates
+# Add GPS coordinates if not already present
 # Add Country Code, Country, State, City, and location based on GPS coordination
 # Add timezone offset based on GPS coordinates
 # Add capture date and time
@@ -11,8 +11,14 @@
 # Add values to Track it as an origional scan, or an exported edit
 
 
-backup file and Strip all non-critical metadate except for icc profile
-exiftool -all= --icc_profile:all -r .
+Backup file and strip all non-critical metadate except 
+-ICC color profile
+-orientation
+-GPS coordinates
+
+
+
+exiftool -ext jpg tif jpeg tiff -all=     -r .
 
 
 
