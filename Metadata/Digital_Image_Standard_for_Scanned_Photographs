@@ -1,4 +1,13 @@
 # Doc standards / goal for all digital image files created by scanning a physical print
+# rename tiff to tiff
+# mac
+find . -type f -name "*.tiff" | while IFS= read -r f; do mv -- "$f" "${f%.tiff}.tif" done
+# Windows Powershell
+Get-ChildItem -Recurse -Filter *.tiff | Rename-Item -NewName { $_.Name -replace '\.tiff$', '.tif' }
+# export metadata for jpg and tif into a CSV
+exiftool -ext tif -ext jpg -progress -csv . > metadata.csv
+
+
 # strip all non-critical metadata from the digital image
 # set filesystem metadata date tags to current / or at least post 1980 for universal file system compatibility. NO dependancies will be made on these fragile values, so compatibility is the only goal here
 # Add GPS coordinates if not already present
