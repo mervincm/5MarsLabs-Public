@@ -2,17 +2,24 @@
 # rename tiff to tiff
 # mac
 find . -type f -name "*.tiff" | while IFS= read -r f; do mv -- "$f" "${f%.tiff}.tif" done
+
 # Windows Powershell
 Get-ChildItem -Recurse -Filter *.tiff | Rename-Item -NewName { $_.Name -replace '\.tiff$', '.tif' }
+
 # export metadata for jpg and tif into a CSV
 exiftool -ext tif -ext jpg -progress -csv . > metadata.csv
 
 #modify all *.tif files and set the CameraModel to EPSON Perfection V500
 exiftool -r -progress -ext tif -overwrite_original -Make="EPSON" -Model="Perfection V500" .
 
-# strip all non-critical metadata from the digital image
+#modify all *.tif files and set the CameraModel to EPSON Perfection V500
+exiftool -r -progress -ext jpg -overwrite_original -Make="EPSON" -Model="Perfection V500" .
+
+
 # set filesystem metadata date tags to current / or at least post 1980 for universal file system compatibility. NO dependancies will be made on these fragile values, so compatibility is the only goal here
+bulk file 
 # Add GPS coordinates if not already present
+
 # Add Country Code, Country, State, City, and location based on GPS coordination
 # Add timezone offset based on GPS coordinates
 # Add capture date and time
