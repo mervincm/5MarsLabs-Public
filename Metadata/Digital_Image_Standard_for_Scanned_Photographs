@@ -29,6 +29,7 @@ Backup file and strip all non-critical metadate except
 
 
 
+
 exiftool -ext jpg tif jpeg tiff -all=     -r .
 
 
