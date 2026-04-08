@@ -8,7 +8,7 @@ Get-ChildItem -Recurse -Filter *.tiff | Rename-Item -NewName { $_.Name -replace 
 exiftool -ext tif -ext jpg -progress -csv . > metadata.csv
 
 # delete metadata from files
-exiftool -ext jpg -ext tif -progress -all= --icc_profile:all -overwrite_original .
+exiftool -ext jpg -ext tif -progress -m -all= --icc_profile:all -overwrite_original .
 exiftool -ext jpg -ext tif -progress -ImageDescription= -Software= -Make= -Model= -ModifyDate= -overwrite_original .
 
 # repair bad metadata
