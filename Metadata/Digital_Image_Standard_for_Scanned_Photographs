@@ -8,13 +8,12 @@ Get-ChildItem -Recurse -Filter *.tiff | Rename-Item -NewName { $_.Name -replace 
 exiftool -ext tif -ext jpg -progress -csv . > metadata.csv
 
 # delete metadata from files
-exiftool -progress -all= --icc_profile:all -overwrite_original *.jpg
-exiftool -progress -all= --icc_profile:all -overwrite_original *.tif
-exiftool -progress -ImageDescription= -Software= -Make= -Model= -ModifyDate= -overwrite_original *.tif 
+exiftool -ext jpg -ext tif -progress -all= --icc_profile:all -overwrite_original .
+exiftool -ext jpg -ext tif -progress -ImageDescription= -Software= -Make= -Model= -ModifyDate= -overwrite_original .
 
 # repair bad metadata
 exiftool -progress -ext tif -ext jpg -F -makernotes:all= -overwrite_original .
-exiftool -progress -ext jpg -overwrite_original -XMP-crs:all= .  
+exiftool -progress -ext tif -ext jpg -overwrite_original -XMP-crs:all= .  
 
 # set the Camera Make and Model to EPSON Perfection V500
 exiftool -r -progress -ext tif -ext jpg -overwrite_original -Make="EPSON" -Model="Perfection V500" .
