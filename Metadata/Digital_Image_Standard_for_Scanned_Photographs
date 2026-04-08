@@ -18,7 +18,7 @@ exiftool -progress -ext tif -ext jpg -overwrite_original -XMP-crs:all= .
 # set the Camera Make and Model to EPSON Perfection V500
 exiftool -r -progress -ext tif -ext jpg -overwrite_original -Make="EPSON" -Model="Perfection V500" .
 # set filesystem metadata date tags to current / or at least post 1980 for universal file system compatibility. NO dependancies will be made on these fragile values, so compatibility is the only goal here
-bulk file changer to 1/1/2000 UTC
+# not usually required bulk file changer to 1/1/2000 UTC
 # set Digital Creation Date if not already set 
 exiftool -progress -if 'not $DigitalCreationDate' "-DigitalCreationDate=2025:01:01 12:00:00" -overwrite_original . 
 # Add GPS coordinates if not already present
