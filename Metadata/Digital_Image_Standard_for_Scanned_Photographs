@@ -1,9 +1,36 @@
 # Doc standards / goal for all digital image files created by scanning a physical print
 
-# rename tiff to tif or jpeg to jpg
+# Rename tiff to tif and jpeg to jpg
+Mac
 find . -type f -name "*.tiff" | while IFS= read -r f; do mv -- "$f" "${f%.tiff}.tif" done
+Windows
 Get-ChildItem -Recurse -Filter *.tiff | Rename-Item -NewName { $_.Name -replace '\.tiff$', '.tif' }
 
+# Set the Camera Make and Model to EPSON Perfection V500
+Mac/Win
+exiftool -r -progress -ext tif -ext jpg -ext xmp -overwrite_original -Make="EPSON" -Model="Perfection V500" .
+
+# set filesystem metadata date tags to current / or at least post 1980 for universal file system compatibility. NO dependancies will be made on these fragile values, so compatibility is the only goal here
+Win bulkfilechanger.exe to 1/1/2000 UTC
+
+
+# copy tags from xmp file to main jpg
+exiftool -tagsfromfile %d%f.xmp -all:all -ext jpg -r  .
+
+#Set subsec times to 000
+exiftool -progress -SubsecTime=000 -ext jpg -ext tif . -r
+exiftool -progress -SubsecTimeOriginal=000 -ext jpg -ext tif . -r
+
+# set Digital Creation Date if not already set 
+win (confirmed in LRC+IRFANView) exiftool uses createdate to set datetimedigitized
+exiftool -CreateDate="2026:03:01 12:00:00-06:00" -ext tif .
+exiftool -CreateDate="2026:03:01 12:00:00-06:00" -ext jpg .
+  might be useful
+    exiftool -progress -if 'not $DigitalCreationDate' "-DigitalCreationDate=2026:03:01 12:00:00" -ext xmp -ext tif -ext jpg -overwrite_original . 
+    exiftool -DateTimeDigitized="2026:03:01 12:00:00-06:00" -ext tif .
+    exiftool -DateTimeDigitized="2026:03:01 12:00:00-06:00" -OffsetTimeDigitized="-06:00" -ext tif ,
+
+#OPTIONAL
 # export metadata for jpg and tif into a CSV
 exiftool -ext tif -ext jpg -progress -csv . > metadata.csv
 
@@ -15,12 +42,6 @@ exiftool -ext jpg -ext tif -progress -ImageDescription= -Software= -Make= -Model
 exiftool -progress -ext tif -ext jpg -F -makernotes:all= -overwrite_original .
 exiftool -progress -ext tif -ext jpg -overwrite_original -XMP-crs:all= .  
 
-# set the Camera Make and Model to EPSON Perfection V500
-exiftool -r -progress -ext tif -ext jpg -overwrite_original -Make="EPSON" -Model="Perfection V500" .
-# set filesystem metadata date tags to current / or at least post 1980 for universal file system compatibility. NO dependancies will be made on these fragile values, so compatibility is the only goal here
-# not usually required bulk file changer to 1/1/2000 UTC
-# set Digital Creation Date if not already set 
-exiftool -progress -if 'not $DigitalCreationDate' "-DigitalCreationDate=2025:01:01 12:00:00" -overwrite_original . 
 # Add GPS coordinates if not already present
 LRC
 # Add Country Code, Country, State, City, and location based on GPS coordination
